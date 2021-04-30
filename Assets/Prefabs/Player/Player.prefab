@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7504394578360542107}
   - component: {fileID: 7504394578360542108}
   - component: {fileID: 7504394578360542111}
+  - component: {fileID: 7504394578360542080}
   - component: {fileID: 7504394578360542110}
   - component: {fileID: 7504394578360542081}
-  - component: {fileID: 7504394578360542080}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -148,6 +148,24 @@ MonoBehaviour:
   maximumLives: 5
   deathEffect: {fileID: 6218169049356006189, guid: 68794701c80057447857bb433e54c579, type: 3}
   hitEffect: {fileID: 5156419567158778961, guid: d35295653acdbe24081a5caee3d9c353, type: 3}
+--- !u!114 &7504394578360542080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7504394578360542104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f75388997f8d4264a86b7441dc9ea74e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 3562651836113712045, guid: aee1688b385340b4bab2b46707955895, type: 3}
+  projectileHolder: {fileID: 0}
+  isPlayerControlled: 1
+  fireRate: 0.05
+  projectileSpread: 1
+  fireEffect: {fileID: 8760527720381774531, guid: 4ea968b40954918418e42a17ffec969a, type: 3}
 --- !u!50 &7504394578360542110
 Rigidbody2D:
   serializedVersion: 4
@@ -200,21 +218,3 @@ PolygonCollider2D:
       - {x: 0.71875, y: -0.71875}
       - {x: 0.7226647, y: -0.7075445}
       - {x: 0.05406493, y: 0.7148353}
---- !u!114 &7504394578360542080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7504394578360542104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f75388997f8d4264a86b7441dc9ea74e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 3562651836113712045, guid: aee1688b385340b4bab2b46707955895, type: 3}
-  projectileHolder: {fileID: 0}
-  isPlayerControlled: 1
-  fireRate: 0.05
-  projectileSpread: 1
-  fireEffect: {fileID: 8760527720381774531, guid: 4ea968b40954918418e42a17ffec969a, type: 3}
