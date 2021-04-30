@@ -146,9 +146,9 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                GoToPage(pausePageIndex);
                 Time.timeScale = 0;
                 isPaused = true;
+                GoToPage(pausePageIndex);
             }
         }      
     }
