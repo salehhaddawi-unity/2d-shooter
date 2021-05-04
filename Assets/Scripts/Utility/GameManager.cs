@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
     [Tooltip("The player's score")]
     [SerializeField] private int gameManagerScore = 0;
 
+    [Tooltip("The player's money")]
+    [SerializeField] private int gameManagerMoney = 500;
+
+    [Tooltip("The player's money")]
+    [SerializeField] private int gameManagerWave = 1;
+
     // Static getter/setter for player score (for convenience)
     public static int score
     {
@@ -37,6 +43,38 @@ public class GameManager : MonoBehaviour
         {
             instance.gameManagerScore = value;
         }
+    }
+
+    public int GetWave()
+    {
+        return gameManagerWave;
+    }
+
+    public void NextWave()
+    {
+        gameManagerWave++; ;
+    }
+
+    public int GetPlayerMoney()
+    {
+        return gameManagerMoney;
+    }
+
+    public void AddToPlayerMoney(int amount)
+    {
+        gameManagerMoney += amount; ;
+    }
+
+    public bool UsePlayerMoney(int amount)
+    {
+        if (amount > gameManagerMoney)
+        {
+            return false;
+        }
+
+        gameManagerMoney -= amount;
+
+        return true;
     }
 
     // The highest score obtained by this player
@@ -225,6 +263,11 @@ public class GameManager : MonoBehaviour
         {
             SaveHighScore();
         }
+
+        instance.AddToPlayerMoney(scoreAmount);
+
+        SpawnManager.instance.OnEnemyDestroyed();
+
         UpdateUIElements();
     }
     

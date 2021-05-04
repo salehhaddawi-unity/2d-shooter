@@ -13,6 +13,8 @@ public class ShootingController : MonoBehaviour
     public GameObject projectilePrefab = null;
     [Tooltip("The transform in the heirarchy which holds projectiles if any")]
     public Transform projectileHolder = null;
+    [Tooltip("The transform child gun if any")]
+    public List<Transform> projectileGuns;
 
     [Header("Input")]
     [Tooltip("Whether this shooting controller is controled by the player")]
@@ -119,7 +121,7 @@ public class ShootingController : MonoBehaviour
         if ((Time.timeSinceLevelLoad - lastFired) > fireRate)
         {
             // Launches a projectile
-            SpawnProjectile();
+            SpawnProjectilePerGun();
 
             if (fireEffect != null)
             {
@@ -131,6 +133,21 @@ public class ShootingController : MonoBehaviour
         }
     }
 
+    public void SpawnProjectilePerGun()
+    {
+        if (projectileGuns.Capacity != 0)
+        {
+            foreach (var gun in projectileGuns)
+            {
+                SpawnProjectile(gun);
+            }
+        }
+        else
+        {
+            SpawnProjectile();
+        }
+    }
+
     /// <summary>
     /// Description:
     /// Spawns a projectile and sets it up
@@ -139,13 +156,15 @@ public class ShootingController : MonoBehaviour
     /// Returns: 
     /// void (no return)
     /// </summary>
-    public void SpawnProjectile()
+    public void SpawnProjectile(Transform gunTransform = null)
     {
         // Check that the prefab is valid
         if (projectilePrefab != null)
         {
+            var trans = gunTransform != null ? gunTransform : transform;
+
             // Create the projectile
-            GameObject projectileGameObject = Instantiate(projectilePrefab, transform.position, transform.rotation, null);
+            GameObject projectileGameObject = Instantiate(projectilePrefab, trans.position, trans.rotation, null);
 
             // Account for spread
             Vector3 rotationEulerAngles = projectileGameObject.transform.rotation.eulerAngles;
