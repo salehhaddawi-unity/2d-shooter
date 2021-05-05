@@ -49,6 +49,8 @@ MonoBehaviour:
   - {x: 15, y: 1}
   - {x: 25, y: 1}
   - {x: 40, y: 1}
+  - {x: 55, y: 0.8}
+  - {x: 75, y: 0.8}
   enemyPrefab: {fileID: 111767558614867189, guid: cfd62ad4c55daa942bae8f75211b08e0, type: 3}
   timeBetweenWaves: 5
   spawnPoints: []

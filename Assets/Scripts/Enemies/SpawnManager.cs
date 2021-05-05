@@ -6,13 +6,30 @@ public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager instance;
 
-    // 0 is ignored
-    // X => spawn count
-    // Y => spawn delay
-    public Vector2[] wavesSpawn;
-
     public GameObject enemyPrefab = null;
 
+    [Header("Enemy Count Options")]
+    public int mainEnemiesCount = 30;
+
+    public int startEnemiesCount = 6;
+
+    public int wave1To4Increase = 2;
+
+    public int wave5To9Increase = 2;
+
+    public float wave10PlusIncreaseMultiplier = 0.15f;
+
+    [Header("Enemy Health Options")]
+    public float startHealth = 3;
+
+    public float healthIncrease = 1;
+
+    [Header("Enemy Speed Options")]
+    public float startSpeed = 2;
+
+    public float maxSpeed = 6;
+
+    [Header("Spawn Wave Options")]
     public float timeBetweenWaves = 5;
 
     [SerializeField] private SpawnPoint[] spawnPoints;
@@ -21,9 +38,9 @@ public class SpawnManager : MonoBehaviour
     private float lastSpawnTime = Mathf.Infinity;
 
     // The number of enemies that have been spawned
-    [SerializeField] private int currentlySpawned = 0;
+    [SerializeField] private int spawned = 0;
 
-    [SerializeField] private int rememiningSpawned = 0;
+    [SerializeField] private int rememining = 0;
 
     private void Awake()
     {
@@ -56,14 +73,15 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(timeBetweenWaves);
 
         lastSpawnTime = Mathf.NegativeInfinity;
-        currentlySpawned = 0;
+        spawned = 0;
+        rememining = GetMaxSpawnCountForCurrentWave();
     }
 
     public void OnEnemyDestroyed()
     {
-        rememiningSpawned--;
+        rememining--;
 
-        if (rememiningSpawned == 0)
+        if (rememining == 0)
         {
             GameManager.instance.NextWave();
 
@@ -73,26 +91,33 @@ public class SpawnManager : MonoBehaviour
 
     private float GetSpawnDelayForCurrentWave()
     {
-        int wave = GameManager.instance.GetWave();
-
-        float delay = wavesSpawn[wave].y;
-
-        return delay;
+        return 1;
     }
 
-    private float GetMaxSpawnCountForCurrentWave()
+    private int GetMaxSpawnCountForCurrentWave()
     {
         int wave = GameManager.instance.GetWave();
 
-        float maxCount = wavesSpawn[wave].x;
+        // wave 1 - 4
+        if (wave >= 1 || wave <= 4)
+        {
+            return startEnemiesCount + (wave * wave1To4Increase);
+        }
 
-        return maxCount;
+        // wave 5 - 9
+        else if (wave >= 5 || wave <= 9)
+        {
+            return mainEnemiesCount + (wave * wave5To9Increase);
+        }
+
+        // wave 10+
+        return (int)(wave * wave10PlusIncreaseMultiplier) * mainEnemiesCount;
     }
 
     private void CheckSpawnTimer()
     {
         // If it is time for an enemy to be spawned
-        if (Time.timeSinceLevelLoad > lastSpawnTime + GetSpawnDelayForCurrentWave() && (currentlySpawned < GetMaxSpawnCountForCurrentWave()))
+        if (Time.timeSinceLevelLoad > lastSpawnTime + GetSpawnDelayForCurrentWave() && (spawned < GetMaxSpawnCountForCurrentWave()))
         {
             // Determine spawn location
             Vector3 spawnLocation = GetSpawnLocation();
@@ -108,6 +133,13 @@ public class SpawnManager : MonoBehaviour
         return spawnPoints[rand].transform.position;
     }
 
+    private int GetSpawnedEnemyHealth()
+    {
+        int wave = GameManager.instance.GetWave();
+
+        return (int) (startHealth + (wave * healthIncrease));
+    }
+
     private void Spawn(Vector3 spawnLocation)
     {
         // Make sure the prefab is valid
@@ -115,23 +147,15 @@ public class SpawnManager : MonoBehaviour
         {
             // Create the enemy gameobject
             GameObject enemyGameObject = Instantiate(enemyPrefab, spawnLocation, enemyPrefab.transform.rotation, null);
-            /*
+            
             Enemy enemy = enemyGameObject.GetComponent<Enemy>();
-            ShootingController[] shootingControllers = enemyGameObject.GetComponentsInChildren<ShootingController>();
 
-            // Setup the enemy if necessary
-            if (enemy != null)
-            {
-                enemy.followTarget = Find;
-            }
-            foreach (ShootingController gun in shootingControllers)
-            {
-                gun.projectileHolder = projectileHolder;
-            }*/
+            Health enemyHealth = enemyGameObject.GetComponent<Health>();
+            enemyHealth.maximumHealth = GetSpawnedEnemyHealth();
+            enemyHealth.currentHealth = GetSpawnedEnemyHealth();
 
             // Incremment the spawn count
-            currentlySpawned++;
-            rememiningSpawned++;
+            spawned++;
             lastSpawnTime = Time.timeSinceLevelLoad;
         }
     }

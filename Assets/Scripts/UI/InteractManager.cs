@@ -49,6 +49,8 @@ public class InteractManager : MonoBehaviour
         if (current != null)
         {
             current.OnActionAccepted();
+
+            GameManager.UpdateUIElements();
         }
     }
 }
