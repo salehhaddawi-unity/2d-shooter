@@ -26,7 +26,7 @@ public class Controller : MonoBehaviour
     /// <summary>
     /// Enum which stores different aiming modes
     /// </summary>
-    public enum AimModes { AimTowardsMouse, AimForwards };
+    public enum AimModes { AimTowardsMouse, AimForwards, AimTowardsMouseNoRotate };
 
     [Tooltip("The aim mode in use by this player:\n" +
         "Aim Towards Mouse: Player rotates to face the mouse\n" +
@@ -138,6 +138,11 @@ public class Controller : MonoBehaviour
         // Move the player
         MovePlayer(movementVector);
         LookAtPoint(lookPosition);
+    }
+
+    public Vector2 GetInput()
+    {
+        return new Vector2(inputManager.horizontalMoveAxis, inputManager.verticalMoveAxis);
     }
 
     /// <summary>
